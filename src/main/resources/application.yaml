@@ -1,6 +1,28 @@
 spring:
   datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
     url: jdbc:mysql://localhost:3306/james?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai
     username: root
     password: 123456
     driver-class-name: com.mysql.jdbc.Driver
+    druid:
+      # 连接池参数
+      initial-size: 5
+      min-idle: 5
+      max-active: 20
+      max-wait: 5000
+      # 配置 druid 监控页面 ，启动后可访问http://localhost:8080/druid/sql.html
+      web-stat-filter:
+        enabled: true
+        exclusions: "*.js, *.gif, *.jpg, *.png ,*.css ,*.ico, /druid/*"
+
+      stat-view-servlet:
+        enabled: true
+        url-pattern: /druid/*
+        login-password: root
+        login-username: root
+
+logging:
+  config: classpath:logback.xml
+  level:
+    com.james.concurrency.mapper: trace
