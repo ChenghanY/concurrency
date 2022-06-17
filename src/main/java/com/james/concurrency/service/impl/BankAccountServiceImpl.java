@@ -6,6 +6,7 @@ import com.james.concurrency.service.BankAccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 @Service
 public class BankAccountServiceImpl implements BankAccountService {
@@ -17,14 +18,18 @@ public class BankAccountServiceImpl implements BankAccountService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void consume(Long id, int cost) throws InterruptedException {
+    public void consume(Long id, int cost) {
         BankAccount bankAccount = mapper.selectById(id);
         int newBalance = bankAccount.getBalance() - cost;
         mapper.updateBalanceById(newBalance, id);
         if (count == 0) {
             count++;
-            Thread.sleep(5000);
-            throw new RuntimeException();
+            try {
+                Thread.sleep(5000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
         }
     }
 }

@@ -13,7 +13,7 @@ public class BankAccountController {
     BankAccountService bankAccountService;
 
     @RequestMapping("/consume")
-    public String consume(@RequestParam(name = "id") Long id, @RequestParam(name = "cost") int cost) throws InterruptedException {
+    public String consume(@RequestParam(name = "id") Long id, @RequestParam(name = "cost") int cost)  {
         bankAccountService.consume(id, cost);
         return "success";
     }
