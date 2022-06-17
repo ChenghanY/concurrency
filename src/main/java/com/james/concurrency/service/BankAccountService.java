@@ -1,5 +1,7 @@
 package com.james.concurrency.service;
 
+import com.james.concurrency.util.TransactionalCallBack;
+
 public interface BankAccountService {
 
     /**
@@ -7,5 +9,5 @@ public interface BankAccountService {
      * @param id 用户id
      * @param cost 支出金额
      */
-    void consume(Long id, int cost);
+    void consume(Long id, int cost, TransactionalCallBack callBack);
 }
