@@ -1,12 +1,22 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.james.concurrency.mapper.BankAccountMapper">
+    <resultMap id="BaseResultMap" type="com.james.concurrency.dataobject.BankAccount">
+        <id column="id" jdbcType="BIGINT" property="id" />
+        <result column="name" jdbcType="TIMESTAMP" property="name" />
+        <result column="balance" jdbcType="INTEGER" property="balance" />
+        <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+    </resultMap>
+    <sql id="Base_Column_List">
+        id, name, balance, create_date
+    </sql>
 
     <update id="updateBalanceById">
-        update `bank_account` set `balance` = #{balance} where id = #{id}
+        update `bank_account` set `balance` = #{balance,jdbcType=INTEGER}
+        where id = #{id,jdbcType=BIGINT}
     </update>
 
-    <select id="selectById" resultType="com.james.concurrency.dataobject.BankAccount">
-        select * from `bank_account` where `id` = #{id}
+    <select id="selectById"  resultMap="BaseResultMap">
+        select * from `bank_account` where `id` = #{id,jdbcType=BIGINT}
     </select>
 </mapper>

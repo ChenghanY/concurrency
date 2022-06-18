@@ -1,35 +1,31 @@
 package com.james.concurrency.controller;
 
+import com.james.concurrency.dataobject.BankAccount;
+import com.james.concurrency.mapper.BankAccountMapper;
 import com.james.concurrency.service.BankAccountService;
+import com.james.concurrency.service.impl.BankAccountServiceImpl;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.interceptor.TransactionAspectSupport;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 
 @Controller
 public class BankAccountController {
 
-    int count = 0;
-
     @Autowired
     BankAccountService bankAccountService;
 
-    @RequestMapping("/consume")
-    public String consume(@RequestParam(name = "id") Long id, @RequestParam(name = "cost") int cost)  {
-        if (count == 0) {
-            count ++;
-            bankAccountService.consume(id, cost, () -> {
-                try {
-                    Thread.sleep(5000);
-                } catch (InterruptedException e) {
+    @Autowired
+    BankAccountMapper bankAccountMapper;
 
-                }
-                TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-            });
-        } else {
-            bankAccountService.consume(id, cost, () -> {});
-        }
+    @RequestMapping("/consume")
+    public String consume() throws InterruptedException {
+
         return "success";
     }
 }

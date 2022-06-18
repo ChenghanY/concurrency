@@ -26,13 +26,8 @@ mybatis:
   type-aliases-package: com.james.dataobject
   mapper-locations: mapper/*Mapper.xml
   map-underscore-to-camel-case: true
+  cache-enabled: false
 
 # logback
 logging:
   config: classpath:logback.xml
-  level:
-    sample:
-      mybatis:
-        web:
-          # 单独声明 mybatis mapper 的日志级别
-          mapper: "TRACE"
