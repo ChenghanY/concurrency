@@ -1,4 +1,4 @@
-package com.james.all
+package com.james.concurrency.all
 
 import com.james.concurrency.ConcurrencyApplication
 import com.james.concurrency.dataobject.BankAccount
