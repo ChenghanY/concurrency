@@ -16,6 +16,11 @@
         where id = #{id,jdbcType=BIGINT}
     </update>
 
+    <update id="increaseBalanceById">
+        update `bank_account` set `balance` = `balance` - #{cost,jdbcType=INTEGER}
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+
     <select id="selectById"  resultMap="BaseResultMap">
         select * from `bank_account` where `id` = #{id,jdbcType=BIGINT}
     </select>

@@ -24,4 +24,10 @@ public class BankAccountServiceImpl implements BankAccountService {
         int newBalance = bankAccount.getBalance() - cost;
         mapper.updateBalanceById(newBalance, id);
     }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void atomicConsume(Long id, Integer cost) {
+        mapper.increaseBalanceById(cost, id);
+    }
 }

@@ -10,7 +10,7 @@
 
     <!--滚动文件日志-->
     <property name="logFile" value="logs/concurrency"/>
-    <property name="maxFileSize" value="30MB"/>
+    <property name="maxFileSize" value="300MB"/>
     <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>${logFile}.log</file>
         <encoder>

@@ -8,4 +8,11 @@ public interface BankAccountService {
      * @param cost 支出金额
      */
     void consume(Long id, int cost);
+
+    /**
+     * 用户消费 - 原子操作
+     * @param id 用户id
+     * @param cost 支出金额
+     */
+    void atomicConsume(Long id, Integer cost);
 }

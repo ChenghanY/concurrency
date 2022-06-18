@@ -7,10 +7,8 @@ spring:
     driver-class-name: com.mysql.jdbc.Driver
     # druid 连接池
     druid:
-      initial-size: 5
-      min-idle: 5
-      max-active: 20
-      max-wait: 5000
+      max-active: 10000
+      max-wait: 100000
       # 配置 druid 监控页面 ，启动后可访问http://localhost:8080/druid/sql.html
       web-stat-filter:
         enabled: true
