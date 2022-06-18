@@ -36,3 +36,16 @@ INSERT INTO `bank_account` VALUES (1, 'james', 500, '2022-06-15 19:38:22');
 INSERT INTO `bank_account` VALUES (2, 'kobe', 500, '2022-06-15 19:38:22');
 
 SET FOREIGN_KEY_CHECKS = 1;
+
+
+-- 查全局事务参数
+SELECT
+@@GLOBAL.transaction_isolation,
+@@GLOBAL.transaction_read_only,
+@@GLOBAL.max_connections;
+
+-- 设置隔离级别
+SET @@GLOBAL.transaction_isolation = 'READ-UNCOMMITTED';
+
+-- 设置连接数, 避免连接被拒绝
+SET @@GLOBAL.max_connections = 5000;

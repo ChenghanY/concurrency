@@ -20,14 +20,13 @@ class AtomicSpec extends Specification {
     @Autowired
     BankAccountMapper bankAccountMapper;
 
-    def "不区分事务隔离环境，应用层使用了非原子性的代码，异常"() {
-        int concurrent_count = 100;
+    def "任意隔离级别下，应用层使用了非原子性的代码，异常"() {
         given:
-        // 初始值500元
+        int concurrent_count = 100;
         bankAccountMapper.updateBalanceById(concurrent_count,1);
         ExecutorService service = Executors.newFixedThreadPool(concurrent_count);
 
-        // 100次消费，每次1元，业务期望最终账户剩余0元
+        // 每次消费1元，业务期望最终账户剩余0元
         for (int i = 0; i < concurrent_count; i++) {
             service.execute(() -> bankAccountService.consume(1L, 1));
         }
@@ -35,7 +34,7 @@ class AtomicSpec extends Specification {
         while (! service.isTerminated());
 
         expect:
-        // 消费100次，最终账户剩余大于0元，则非原子性的代码存在隐患
+        // 最终账户剩余大于0元，则非原子性的代码存在隐患 ---- 更新丢失
         BankAccount bankAccount = bankAccountMapper.selectById(1L);
         def balance = bankAccount.getBalance();
         println(balance);
