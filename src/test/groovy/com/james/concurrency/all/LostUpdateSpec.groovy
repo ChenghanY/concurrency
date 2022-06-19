@@ -36,9 +36,7 @@ class LostUpdateSpec extends Specification {
         expect:
         // 最终账户剩余大于0元，则非原子性的代码存在隐患 ---- 更新丢失
         BankAccount bankAccount = bankAccountMapper.selectById(1L);
-        def balance = bankAccount.getBalance();
-        println(balance);
-        balance > 0;
+        bankAccount.getBalance() > 0;
     }
 
     def "任意隔离级别下，使用原子性代码,2000次并发无异常" () {
@@ -55,27 +53,42 @@ class LostUpdateSpec extends Specification {
 
         expect:
         BankAccount bankAccount = bankAccountMapper.selectById(1L);
-        def balance = bankAccount.getBalance();
-        println(balance);
-        balance == 0;
+        bankAccount.getBalance() == 0;
     }
 
-    def "任意隔离级别下，应用层使用原子性代码,2000次并发无异常" () {
+    def "任意隔离级别下，应用层使用forUpdate加锁,2000次并发无异常" () {
         given:
         int concurrent_count = 2000;
         bankAccountMapper.updateBalanceById(concurrent_count,1);
         ExecutorService service = Executors.newFixedThreadPool(concurrent_count);
 
         for (int i = 0; i < concurrent_count; i++) {
-            service.execute(() -> bankAccountService.atomicConsume(1L, 1));
+            service.execute(() -> bankAccountService.forUpdateConsume(1L, 1));
         }
         service.shutdown();
         while (! service.isTerminated());
 
         expect:
         BankAccount bankAccount = bankAccountMapper.selectById(1L);
-        def balance = bankAccount.getBalance();
-        println(balance);
-        balance == 0;
+        bankAccount.getBalance() == 0;
+    }
+
+    def "任意隔离级别下，应用层使用lock in share mode加共享锁,2000次并发，发生死锁" () {
+        given:
+        int concurrent_count = 2000;
+        bankAccountMapper.updateBalanceById(concurrent_count,1);
+        ExecutorService service = Executors.newFixedThreadPool(concurrent_count);
+
+        for (int i = 0; i < concurrent_count; i++) {
+            service.execute(() -> bankAccountService.lockInShareModeConsume(1L, 1));
+        }
+        service.shutdown();
+        while (! service.isTerminated());
+
+        expect:
+        BankAccount bankAccount = bankAccountMapper.selectById(1L);
+        bankAccount.getBalance() == 0;
+        // 控制台报 MySQLTransactionRollbackException: Deadlock found when trying to get lock; try restarting transaction
+        // 报错运行时可以用 SHOW ENGINE INNODB STATUS; 查看死锁信息
     }
 }

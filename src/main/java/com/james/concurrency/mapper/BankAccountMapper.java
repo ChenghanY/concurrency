@@ -9,7 +9,11 @@ public interface BankAccountMapper {
 
     BankAccount selectById(@Param("id") Long id);
 
+    BankAccount selectByIdForUpdate(@Param("id") Long id);
+
     void updateBalanceById(@Param("balance") int balance, @Param("id")Long id);
 
-    void atomicUpdateBalanceById(int cost, Long id);
+    void atomicUpdateBalanceById(@Param("cost") int cost, @Param("id")Long id);
+
+    BankAccount selectByIdLockInShareMode(@Param("id")Long id);
 }

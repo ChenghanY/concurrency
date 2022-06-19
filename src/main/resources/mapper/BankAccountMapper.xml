@@ -12,11 +12,31 @@
 
     <select id="selectById"  resultMap="BaseResultMap">
         select
-        <include refid="Base_Column_List"/>
+            <include refid="Base_Column_List"/>
         from
-        `bank_account`
+            `bank_account`
         where
-        `id` = #{id,jdbcType=BIGINT}
+            `id` = #{id,jdbcType=BIGINT}
+    </select>
+
+    <select id="selectByIdForUpdate" resultMap="BaseResultMap">
+        select
+            <include refid="Base_Column_List"/>
+        from
+            `bank_account`
+        where
+            `id` = #{id,jdbcType=BIGINT}
+        FOR UPDATE
+    </select>
+
+    <select id="selectByIdLockInShareMode" resultMap="BaseResultMap">
+        select
+            <include refid="Base_Column_List"/>
+        from
+            `bank_account`
+        where
+            `id` = #{id,jdbcType=BIGINT}
+        LOCK IN SHARE MODE
     </select>
 
     <update id="updateBalanceById">

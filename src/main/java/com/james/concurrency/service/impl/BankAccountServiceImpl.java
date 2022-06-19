@@ -30,4 +30,22 @@ public class BankAccountServiceImpl implements BankAccountService {
     public void atomicConsume(Long id, Integer cost) {
         mapper.atomicUpdateBalanceById(cost, id);
     }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void forUpdateConsume(Long id, Integer cost) {
+        // 读操作加互斥锁
+        BankAccount bankAccount = mapper.selectByIdForUpdate(id);
+        int newBalance = bankAccount.getBalance() - cost;
+        mapper.updateBalanceById(newBalance, id);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void lockInShareModeConsume(Long id, Integer cost) {
+        // 读操作加共享锁
+        BankAccount bankAccount = mapper.selectByIdLockInShareMode(id);
+        int newBalance = bankAccount.getBalance() - cost;
+        mapper.updateBalanceById(newBalance, id);
+    }
 }
