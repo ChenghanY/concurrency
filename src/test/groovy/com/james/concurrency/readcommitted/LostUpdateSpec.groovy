@@ -17,7 +17,7 @@ class LostUpdateSpec extends Specification{
     @Autowired
     BankAccountMapper bankAccountMapper;
 
-    def "RC隔离级别下会产生更新丢失"() {
+    def "read committed 隔离级别下产生更新丢失"() {
 
     }
 }

@@ -22,7 +22,7 @@ class DirtyReadSpec extends Specification {
     @Autowired
     TransactionTemplate transactionTemplate;
 
-    def "read uncommitted 隔离级别下产生脏读"() {
+    def "产生脏读 SET @@GLOBAL.transaction_isolation = 'READ-UNCOMMITTED'"() {
         given:
         bankAccountMapper.updateBalanceById(0, 1L);
         // 线程(事务)A
@@ -70,8 +70,7 @@ class DirtyReadSpec extends Specification {
         bankAccountMapper.selectById(1L).getBalance() == 2
     }
 
-
-    def "提升隔离级别至 read committed或以上解决脏读"() {
+    def "解决脏读 SET @@GLOBAL.transaction_isolation = 'READ-COMMITTED' 及以上的隔离级别"() {
         given:
         bankAccountMapper.updateBalanceById(0, 1L);
         // 线程(事务)A
