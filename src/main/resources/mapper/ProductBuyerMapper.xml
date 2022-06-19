@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.james.concurrency.mapper.ProductBuyerMapper">
+    <resultMap id="BaseResultMap" type="com.james.concurrency.dataobject.ProductBuyer">
+        <id column="id" jdbcType="BIGINT" property="id" />
+        <result column="product_id" jdbcType="BIGINT" property="productId" />
+        <result column="buyer" jdbcType="VARCHAR"  property="buyer" />
+    </resultMap>
+    <sql id="Base_Column_List">
+        id, product_id, buyer
+    </sql>
+
+    <select id="selectByProductId" resultMap="BaseResultMap">
+        select
+            <include refid="Base_Column_List"/>
+        from
+            `product_buyer`
+        where
+            `product_id` = #{productId,jdbcType=BIGINT}
+    </select>
+
+    <update id="updateBuyerByProductId">
+        update
+            `product_buyer`
+        set
+            `buyer` = #{buyer,jdbcType=VARCHAR}
+        where
+            `product_id` = #{productId,jdbcType=BIGINT}
+    </update>
+
+</mapper>

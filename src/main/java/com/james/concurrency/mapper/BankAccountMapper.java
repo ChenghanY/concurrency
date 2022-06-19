@@ -11,5 +11,5 @@ public interface BankAccountMapper {
 
     void updateBalanceById(@Param("balance") int balance, @Param("id")Long id);
 
-    void increaseBalanceById(int cost, Long id);
+    void atomicUpdateBalanceById(int cost, Long id);
 }

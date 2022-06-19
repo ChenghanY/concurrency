@@ -34,11 +34,7 @@ class DirtyReadSpec extends Specification {
                     // 1. 线程A写入脏数据
                     bankAccountMapper.updateBalanceById(bankAccount.getBalance() + 1, 1L);
                     // 3. 制造脏数据被使用的间隙
-                    try {
-                        Thread.sleep(3000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
+                    Thread.sleep(3000);
                     // 6. 线程A回滚
                     status.setRollbackOnly();
                 }
@@ -50,11 +46,7 @@ class DirtyReadSpec extends Specification {
             transactionTemplate.execute(new TransactionCallbackWithoutResult() {
                 protected void doInTransactionWithoutResult(TransactionStatus status) {
                     // 2. 等待脏数据写入
-                    try {
-                        Thread.sleep(1000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
+                    Thread.sleep(1000);
                     // 4. 脏数据被读取
                     BankAccount bankAccount = bankAccountMapper.selectById(1L);
                     // 5. 脏数据被写入
@@ -82,11 +74,7 @@ class DirtyReadSpec extends Specification {
                     // 1. 线程A写入脏数据
                     bankAccountMapper.updateBalanceById(bankAccount.getBalance() + 1, 1L);
                     // 3. 制造脏数据被使用的间隙
-                    try {
-                        Thread.sleep(3000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
+                    Thread.sleep(3000);
                     // 6. 线程A回滚
                     status.setRollbackOnly();
                 }
@@ -98,11 +86,7 @@ class DirtyReadSpec extends Specification {
             transactionTemplate.execute(new TransactionCallbackWithoutResult() {
                 protected void doInTransactionWithoutResult(TransactionStatus status) {
                     // 2. 等待脏数据写入
-                    try {
-                        Thread.sleep(1000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
+                    Thread.sleep(1000);
                     // 4. 脏数据被读取
                     BankAccount bankAccount = bankAccountMapper.selectById(1L);
                     // 5. 脏数据被写入

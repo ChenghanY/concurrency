@@ -3,25 +3,38 @@
 <mapper namespace="com.james.concurrency.mapper.BankAccountMapper">
     <resultMap id="BaseResultMap" type="com.james.concurrency.dataobject.BankAccount">
         <id column="id" jdbcType="BIGINT" property="id" />
-        <result column="name" jdbcType="TIMESTAMP" property="name" />
+        <result column="name" jdbcType="VARCHAR" property="name" />
         <result column="balance" jdbcType="INTEGER" property="balance" />
-        <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
     </resultMap>
     <sql id="Base_Column_List">
         id, name, balance, create_date
     </sql>
 
-    <update id="updateBalanceById">
-        update `bank_account` set `balance` = #{balance,jdbcType=INTEGER}
-        where id = #{id,jdbcType=BIGINT}
-    </update>
-
-    <update id="increaseBalanceById">
-        update `bank_account` set `balance` = `balance` - #{cost,jdbcType=INTEGER}
-        where id = #{id,jdbcType=BIGINT}
-    </update>
-
     <select id="selectById"  resultMap="BaseResultMap">
-        select * from `bank_account` where `id` = #{id,jdbcType=BIGINT}
+        select
+        <include refid="Base_Column_List"/>
+        from
+        `bank_account`
+        where
+        `id` = #{id,jdbcType=BIGINT}
     </select>
+
+    <update id="updateBalanceById">
+        update
+            `bank_account`
+        set
+            `balance` = #{balance,jdbcType=INTEGER}
+        where
+            id = #{id,jdbcType=BIGINT}
+    </update>
+
+    <update id="atomicUpdateBalanceById">
+        update
+            `bank_account`
+        set
+            `balance` = `balance` - #{cost,jdbcType=INTEGER}
+        where
+            id = #{id,jdbcType=BIGINT}
+    </update>
+
 </mapper>

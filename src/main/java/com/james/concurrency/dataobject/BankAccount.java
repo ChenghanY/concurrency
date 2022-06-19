@@ -10,8 +10,6 @@ public class BankAccount {
 
     private int balance;
 
-    private Date createDate;
-
     public Long getId() {
         return id;
     }
@@ -34,13 +32,5 @@ public class BankAccount {
 
     public void setBalance(int balance) {
         this.balance = balance;
-    }
-
-    public Date getCreateDate() {
-        return createDate;
-    }
-
-    public void setCreateDate(Date createDate) {
-        this.createDate = createDate;
     }
 }

@@ -28,6 +28,6 @@ public class BankAccountServiceImpl implements BankAccountService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void atomicConsume(Long id, Integer cost) {
-        mapper.increaseBalanceById(cost, id);
+        mapper.atomicUpdateBalanceById(cost, id);
     }
 }
