@@ -12,7 +12,7 @@ import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
 @SpringBootTest(classes = ConcurrencyApplication.class)
-class AtomicSpec extends Specification {
+class LostUpdateSpec extends Specification {
 
     @Autowired
     BankAccountService bankAccountService;
@@ -20,7 +20,7 @@ class AtomicSpec extends Specification {
     @Autowired
     BankAccountMapper bankAccountMapper;
 
-    def "任意隔离级别下，应用层使用了非原子性的代码，异常"() {
+    def "任意隔离级别下，会存在更新丢失"() {
         given:
         int concurrent_count = 100;
         bankAccountMapper.updateBalanceById(concurrent_count,1);
@@ -39,6 +39,25 @@ class AtomicSpec extends Specification {
         def balance = bankAccount.getBalance();
         println(balance);
         balance > 0;
+    }
+
+    def "任意隔离级别下，使用原子性代码,2000次并发无异常" () {
+        given:
+        int concurrent_count = 2000;
+        bankAccountMapper.updateBalanceById(concurrent_count,1);
+        ExecutorService service = Executors.newFixedThreadPool(concurrent_count);
+
+        for (int i = 0; i < concurrent_count; i++) {
+            service.execute(() -> bankAccountService.atomicConsume(1L, 1));
+        }
+        service.shutdown();
+        while (! service.isTerminated());
+
+        expect:
+        BankAccount bankAccount = bankAccountMapper.selectById(1L);
+        def balance = bankAccount.getBalance();
+        println(balance);
+        balance == 0;
     }
 
     def "任意隔离级别下，应用层使用原子性代码,2000次并发无异常" () {
