@@ -6,7 +6,6 @@ import com.james.concurrency.mapper.BankAccountMapper
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.transaction.TransactionStatus
-import org.springframework.transaction.support.TransactionCallback
 import org.springframework.transaction.support.TransactionCallbackWithoutResult
 import org.springframework.transaction.support.TransactionTemplate
 import spock.lang.Specification
@@ -15,7 +14,6 @@ import java.util.concurrent.Callable
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 import java.util.concurrent.Future
-import java.util.concurrent.FutureTask
 
 /**
  * 官网定义的consistent_read：
