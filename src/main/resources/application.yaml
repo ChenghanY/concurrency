@@ -24,7 +24,7 @@ mybatis:
   type-aliases-package: com.james.dataobject
   mapper-locations: mapper/*Mapper.xml
   map-underscore-to-camel-case: true
-  cache-enabled: false
+  cache-enabled: false # 禁用二级缓存, 一级缓存需要再xml文件挨个指定
 
 # logback
 logging:
