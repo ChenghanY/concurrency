@@ -20,7 +20,7 @@ class DeadLockSpec extends Specification {
     @Autowired
     BankAccountMapper bankAccountMapper;
 
-    def "应用层使用lock in share mode加共享锁 + update, 100次并发，发生死锁" () {
+    def "任意隔离级别下，应用层使用lock in share mode加共享锁 + update, 100次并发，发生死锁" () {
         given:
         int concurrent_count = 2000;
         bankAccountMapper.updateBalanceById(concurrent_count,1);
