@@ -56,7 +56,7 @@ class LostUpdateSpec extends Specification {
         bankAccount.getBalance() == 0;
     }
 
-    def "任意隔离级别下，应用层使用forUpdate加锁,2000次并发无异常" () {
+    def "更新丢失解决：任意隔离级别下，应用层使用forUpdate加锁,2000次并发无异常" () {
         given:
         int concurrent_count = 2000;
         bankAccountMapper.updateBalanceById(concurrent_count,1);
