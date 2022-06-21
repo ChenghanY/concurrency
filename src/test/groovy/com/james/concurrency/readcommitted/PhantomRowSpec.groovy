@@ -149,15 +149,16 @@ class PhantomRowSpec extends Specification {
                 != bankAccountMapper.selectListByName("newName").size();
 
        cleanup:
-        // 恢复修改前的数据
-        beforeList.forEach(e -> bankAccountMapper.updateById(e));
-        bankAccountMapper.deleteByName("newName");
+       // 恢复修改前的数据
+       beforeList.forEach(e -> bankAccountMapper.updateById(e));
+       bankAccountMapper.deleteByName("rose");
     }
 
-    def "幻读解决： 普通select(快照隔离) + SET @@GLOBAL.transaction_isolation = 'REPEATABLE-READ'" () {
+    def "幻读解决： 普通select(快照隔离) + SET @@GLOBAL.transaction_isolation = 'REPEATABLE-READ' 及以上" () {
         given:
         bankAccountMapper.updateBalanceById(300, 1L);
         bankAccountMapper.updateBalanceById(500, 2L);
+        bankAccountMapper.updateBalanceById(600, 3L);
         bankAccountMapper.deleteByName("rose");
 
         ExecutorService executorService = Executors.newFixedThreadPool(2);
@@ -177,7 +178,7 @@ class PhantomRowSpec extends Specification {
                 List<BankAccount> list4Cal2 = bankAccountMapper.selectListByBalanceGt(500);
                 if (list4Cal2.size() > 0) {
                     BankAccount secondCalResult = new BankAccount();
-                    secondCalResult.setBalance(list4Cal.stream().mapToInt(e -> e.getBalance()).sum());
+                    secondCalResult.setBalance(list4Cal2.stream().mapToInt(e -> e.getBalance()).sum());
                     result.add(secondCalResult);
                 }
                 return result;
@@ -208,7 +209,7 @@ class PhantomRowSpec extends Specification {
         bankAccounts.get(0).getBalance() == bankAccounts.get(1).getBalance()
     }
 
-    def "幻读解决： update + SET @@GLOBAL.transaction_isolation = 'REPEATABLE-READ'" () {
+    def "幻读解决： update + SET @@GLOBAL.transaction_isolation = 'REPEATABLE-READ' 及以上" () {
         given:
         bankAccountMapper.updateBalanceById(300, 1L);
         bankAccountMapper.updateBalanceById(500, 2L);
@@ -255,6 +256,6 @@ class PhantomRowSpec extends Specification {
         cleanup:
         // 恢复修改前的数据
         beforeList.forEach(e -> bankAccountMapper.updateById(e));
-        bankAccountMapper.deleteByName("newName");
+        bankAccountMapper.deleteByName("rose");
     }
 }
