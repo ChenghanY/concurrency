@@ -52,7 +52,7 @@ class NonRepeatableReadSpec extends Specification {
     @Autowired
     TransactionTemplate transactionTemplate;
 
-    def "解决不可重复读 当且仅当 SET @@GLOBAL.transaction_isolation = 'REPEATABLE-READ'"() {
+    def "解决不可重复读：使用快照隔离 SET @@GLOBAL.transaction_isolation = 'REPEATABLE-READ'"() {
         given:
 
         ExecutorService executorService = Executors.newFixedThreadPool(2);
@@ -65,6 +65,47 @@ class NonRepeatableReadSpec extends Specification {
                 Thread.sleep(3000);
                 // 3. 第二次查
                 BankAccount second = bankAccountMapper.selectById(1L);
+                result.add(first);
+                result.add(second);
+                return result;
+            });
+            // 由于使用Groovy闭包最好指定类型，记得加as Callable
+        } as Callable) as Future<List<BankAccount>>;
+
+        // 线程(事务)B中途修改数据
+        executorService.execute(() -> {
+            transactionTemplate.execute(new TransactionCallbackWithoutResult() {
+                protected void doInTransactionWithoutResult(TransactionStatus status) {
+                    Thread.sleep(1000);
+                    // 2. 修改数据并提交
+                    bankAccountMapper.atomicUpdateBalanceByCostAndId(1, 1L);
+                }
+            });
+        } as Runnable);
+
+        List<BankAccount> bankAccounts = future.get();
+        executorService.shutdown();
+        while (!executorService.isTerminated()) ;
+
+        expect:
+        // 同一个事务中，两次读取数据不一致，则为不可重复读
+        bankAccounts.get(0).getBalance() == bankAccounts.get(1).getBalance();
+    }
+
+
+    def "解决不可重复读：使用for update排他锁 SET @@GLOBAL.transaction_isolation = 'READ-COMMITTED'"() {
+        given:
+
+        ExecutorService executorService = Executors.newFixedThreadPool(2);
+        // 线程(事务)A重复读取
+        Future<List<BankAccount>> future = executorService.submit(() -> {
+            return transactionTemplate.execute(status -> {
+                List<BankAccount> result = new ArrayList<>();
+                // 1. 第一次查
+                BankAccount first = bankAccountMapper.selectByIdForUpdate(1L);
+                Thread.sleep(3000);
+                // 3. 第二次查
+                BankAccount second = bankAccountMapper.selectByIdForUpdate(1L);
                 result.add(first);
                 result.add(second);
                 return result;

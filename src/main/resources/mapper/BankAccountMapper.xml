@@ -10,6 +10,18 @@
         id, name, balance, create_date
     </sql>
 
+    <insert id="insert" parameterType="com.james.concurrency.dataobject.BankAccount">
+        <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        insert into `bank_account` (name, balance, create_date)
+        values (#{name,jdbcType=VARCHAR}, #{balance,jdbcType=INTEGER}, now())
+    </insert>
+
+    <delete id="deleteByName">
+        delete from `bank_account` where `name` = #{name,jdbcType=VARCHAR}
+    </delete>
+
     <!--flushCache="true" 禁用一级缓存-->
     <select id="selectById"  resultMap="BaseResultMap" flushCache="true">
         select
@@ -38,6 +50,25 @@
         where
             `id` = #{id,jdbcType=BIGINT}
         LOCK IN SHARE MODE
+    </select>
+
+    <select id="selectListByBalanceGt" resultMap="BaseResultMap" flushCache="true">
+        select
+            <include refid="Base_Column_List"/>
+        from
+            `bank_account`
+        where
+            `balance` > #{balance,jdbcType=INTEGER}
+    </select>
+
+    <select id="selectListByBalanceGtForUpdate" resultMap="BaseResultMap" flushCache="true">
+        select
+            <include refid="Base_Column_List"/>
+        from
+            `bank_account`
+        where
+            `balance` > #{balance,jdbcType=INTEGER}
+        FOR UPDATE
     </select>
 
     <update id="updateBalanceById">
