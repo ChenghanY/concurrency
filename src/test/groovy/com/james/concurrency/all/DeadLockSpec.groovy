@@ -34,7 +34,7 @@ class DeadLockSpec extends Specification {
 
         expect:
         BankAccount bankAccount = bankAccountMapper.selectById(1L);
-        bankAccount.getBalance() == 0;
+        bankAccount.getBalance() != 0;
         // 控制台报 MySQLTransactionRollbackException: Deadlock found when trying to get lock; try restarting transaction
         // 运行时可以用 SHOW ENGINE INNODB STATUS; 查看死锁信息
 
