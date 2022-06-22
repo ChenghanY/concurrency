@@ -27,7 +27,7 @@ class DeadLockSpec extends Specification {
         ExecutorService service = Executors.newFixedThreadPool(concurrent_count);
 
         for (int i = 0; i < concurrent_count; i++) {
-            service.execute(() -> bankAccountService.lockInShareModeConsume(1L, 1));
+            service.execute(() -> bankAccountService.lockInShareModeConsume(1, 1L));
         }
         service.shutdown();
         while (! service.isTerminated());

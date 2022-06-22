@@ -28,7 +28,7 @@ class LostUpdateSpec extends Specification {
 
         // 每次消费1元，业务期望最终账户剩余0元
         for (int i = 0; i < concurrent_count; i++) {
-            service.execute(() -> bankAccountService.consume(1L, 1));
+            service.execute(() -> bankAccountService.consume(1, 1L));
         }
         service.shutdown();
         while (! service.isTerminated());
@@ -46,7 +46,7 @@ class LostUpdateSpec extends Specification {
         ExecutorService service = Executors.newFixedThreadPool(concurrent_count);
 
         for (int i = 0; i < concurrent_count; i++) {
-            service.execute(() -> bankAccountService.atomicConsume(1L, 1));
+            service.execute(() -> bankAccountService.atomicConsume(1, 1L));
         }
         service.shutdown();
         while (! service.isTerminated());
@@ -63,7 +63,7 @@ class LostUpdateSpec extends Specification {
         ExecutorService service = Executors.newFixedThreadPool(concurrent_count);
 
         for (int i = 0; i < concurrent_count; i++) {
-            service.execute(() -> bankAccountService.forUpdateConsume(1L, 1));
+            service.execute(() -> bankAccountService.forUpdateConsume(1, 1L));
         }
         service.shutdown();
         while (! service.isTerminated());
