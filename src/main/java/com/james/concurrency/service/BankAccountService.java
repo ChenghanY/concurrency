@@ -29,11 +29,4 @@ public interface BankAccountService {
      * @param cost 支出金额
      */
     void lockInShareModeConsume(Integer cost, Long id);
-
-
-    /**
-     * 传播行为Required测试 。Spring默认
-     */
-    void propagationRequiredInnerConsume(Integer balance, Long id);
-    void OuterConsumeWithRequired(Integer balance, Long id);
 }

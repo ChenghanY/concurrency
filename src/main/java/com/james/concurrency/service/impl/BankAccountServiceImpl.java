@@ -47,19 +47,4 @@ public class BankAccountServiceImpl implements BankAccountService {
         int newBalance = bankAccount.getBalance() - cost;
         mapper.updateBalanceById(newBalance, id);
     }
-
-
-    @Override
-    @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
-    public void OuterConsumeWithRequired(Integer balance, Long id) {
-        propagationRequiredInnerConsume(balance, id);
-        mapper.atomicUpdateBalanceByCostAndId(balance, id);
-    }
-
-    @Override
-    @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
-    public void propagationRequiredInnerConsume(Integer cost, Long id) {
-        mapper.atomicUpdateBalanceByCostAndId(cost, id);
-    }
-
 }
