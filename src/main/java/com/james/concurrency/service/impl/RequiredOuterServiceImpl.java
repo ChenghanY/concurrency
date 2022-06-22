@@ -18,28 +18,28 @@ public class RequiredOuterServiceImpl implements RequiredOuterService {
     InnerService innerService;
 
     @Override
-    public void emptyInvokeInner(Integer cost, Long id) {
+    public void withoutTransactionThenInnerRollBack(Integer cost, Long id) {
         mapper.atomicUpdateBalanceByCostAndId(cost, id);
-        innerService.requiredConsumeByRollbackBySupport(cost, id);
+        innerService.requiredConsumeThenRollback(cost, id);
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void transactionalInvokeInnerRollBackBySupport(Integer cost, Long id) {
+    public void thenInnerRollBack(Integer cost, Long id) {
         mapper.atomicUpdateBalanceByCostAndId(cost, id);
-        innerService.requiredConsumeByRollbackBySupport(cost, id);
+        innerService.requiredConsumeThenRollback(cost, id);
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void transactionalInvokeInnerRollBackByException(Integer cost, Long id) {
+    public void thenInnerRollBackWithException(Integer cost, Long id) {
         mapper.atomicUpdateBalanceByCostAndId(cost, id);
-        innerService.requiredConsumeByRollbackByException(cost, id);
+        innerService.requiredConsumeThenRollbackWithException(cost, id);
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void outerRollbackWithSupportInvokeInner(Integer cost, Long id) {
+    public void thenOuterRollback(Integer cost, Long id) {
         mapper.atomicUpdateBalanceByCostAndId(cost, id);
         innerService.requiredConsume(cost,id);
         TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
@@ -47,7 +47,7 @@ public class RequiredOuterServiceImpl implements RequiredOuterService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void outerRollbackWithExceptionInvokeInner(Integer cost, Long id) {
+    public void thenOuterRollbackWithException(Integer cost, Long id) {
         mapper.atomicUpdateBalanceByCostAndId(cost, id);
         innerService.requiredConsume(cost,id);
         throw new RuntimeException();

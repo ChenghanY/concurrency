@@ -12,7 +12,13 @@ public interface InnerService {
 
     void requiredConsume(Integer cost, Long id);
 
-    void requiredConsumeByRollbackBySupport(Integer cost, Long id);
+    void requiredConsumeThenRollback(Integer cost, Long id);
 
-    void requiredConsumeByRollbackByException(Integer cost, Long id);
+    void requiredConsumeThenRollbackWithException(Integer cost, Long id);
+
+    void requiresNewConsumeThenRollback(Integer cost, Long id);
+
+    void requiresNewConsumeThenRollbackByException(Integer cost, Long id);
+
+    void requiresNewConsume(Integer cost, Long id);
 }

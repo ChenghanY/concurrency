@@ -14,12 +14,6 @@ public class InnerServiceImpl implements InnerService {
     @Autowired
     BankAccountMapper bankAccountMapper;
 
-    /**
-     * required Spring 默认的事务传播级别
-     * @see this#requiredConsume
-     * @see this#requiredConsumeByRollbackBySupport
-     * @see this#requiredConsumeByRollbackByException
-     */
     @Override
     public void requiredConsume(Integer cost, Long id) {
         bankAccountMapper.atomicUpdateBalanceByCostAndId(cost, id);
@@ -27,15 +21,35 @@ public class InnerServiceImpl implements InnerService {
 
     @Override
     @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
-    public void requiredConsumeByRollbackBySupport(Integer cost, Long id) {
+    public void requiredConsumeThenRollback(Integer cost, Long id) {
         bankAccountMapper.atomicUpdateBalanceByCostAndId(cost, id);
         TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
-    public void requiredConsumeByRollbackByException(Integer cost, Long id) {
+    public void requiredConsumeThenRollbackWithException(Integer cost, Long id) {
         bankAccountMapper.atomicUpdateBalanceByCostAndId(cost, id);
         throw new RuntimeException();
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
+    public void requiresNewConsumeThenRollback(Integer cost, Long id) {
+        bankAccountMapper.atomicUpdateBalanceByCostAndId(cost, id);
+        TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
+    public void requiresNewConsumeThenRollbackByException(Integer cost, Long id) {
+        bankAccountMapper.atomicUpdateBalanceByCostAndId(cost, id);
+        throw new RuntimeException();
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
+    public void requiresNewConsume(Integer cost, Long id) {
+        bankAccountMapper.atomicUpdateBalanceByCostAndId(cost, id);
     }
 }
