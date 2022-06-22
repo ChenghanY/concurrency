@@ -2,14 +2,14 @@ package com.james.concurrency.service.impl;
 
 import com.james.concurrency.mapper.BankAccountMapper;
 import com.james.concurrency.service.InnerBankAccountService;
-import com.james.concurrency.service.RequiredOuterBankAccountService;
+import com.james.concurrency.service.RequiredOuterService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 @Service
-public class RequiredOuterBankAccountServiceImpl implements RequiredOuterBankAccountService {
+public class RequiredOuterServiceImpl implements RequiredOuterService {
 
     @Autowired
     BankAccountMapper mapper;

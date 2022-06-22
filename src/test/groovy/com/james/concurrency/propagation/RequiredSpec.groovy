@@ -2,8 +2,7 @@ package com.james.concurrency.propagation
 
 import com.james.concurrency.ConcurrencyApplication
 import com.james.concurrency.mapper.BankAccountMapper
-
-import com.james.concurrency.service.RequiredOuterBankAccountService
+import com.james.concurrency.service.RequiredOuterService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.transaction.UnexpectedRollbackException
@@ -36,12 +35,15 @@ class RequiredSpec extends Specification {
     BankAccountMapper bankAccountMapper;
 
     @Autowired
-    RequiredOuterBankAccountService bankAccountService;
+    RequiredOuterService requiredOuterService;
+
+    def setup() {
+        bankAccountMapper.updateBalanceById(5,1L);
+    }
 
     def "外层调用Required (默认) 行为的事务。内层主动回滚事务，仅回滚内层逻辑"() {
         given:
-        bankAccountMapper.updateBalanceById(5,1L);
-        bankAccountService.emptyInvokeInner(5, 1L);
+        requiredOuterService.emptyInvokeInner(5, 1L);
 
         expect:
         bankAccountMapper.selectById(1L).getBalance() == 0
@@ -49,8 +51,7 @@ class RequiredSpec extends Specification {
 
     def "外层有事务，内层调用Required (默认) 行为的事务。内层主动回滚事务，外层抛出UnexpectedRollbackException异常"() {
         when:
-        bankAccountMapper.updateBalanceById(5,1L);
-        bankAccountService.transactionalInvokeInnerRollBackBySupport(5, 1L);
+        requiredOuterService.transactionalInvokeInnerRollBackBySupport(5, 1L);
 
         then:
         thrown (UnexpectedRollbackException)
@@ -58,8 +59,7 @@ class RequiredSpec extends Specification {
 
     def "外层有事务，内层调用Required (默认) 行为的事务。内层抛Exception，内外逻辑都回滚"() {
         when:
-        bankAccountMapper.updateBalanceById(5,1L);
-        bankAccountService.transactionalInvokeInnerRollBackByException(5, 1L);
+        requiredOuterService.transactionalInvokeInnerRollBackByException(5, 1L);
 
         then:
         thrown (RuntimeException);
@@ -69,8 +69,7 @@ class RequiredSpec extends Specification {
 
     def "外层有事务，内层调用Required (默认) 行为的事务。外层主动回滚，内外逻辑都回滚"() {
         when:
-        bankAccountMapper.updateBalanceById(5,1L);
-        bankAccountService.outerRollbackWithSupportInvokeInner(5, 1L);
+        requiredOuterService.outerRollbackWithSupportInvokeInner(5, 1L);
 
         then:
         bankAccountMapper.selectById(1L).getBalance() == 5;
@@ -78,8 +77,7 @@ class RequiredSpec extends Specification {
 
     def "外层有事务，内层调用Required (默认) 行为的事务。外层抛Exception，内外逻辑都回滚"() {
         when:
-        bankAccountMapper.updateBalanceById(5,1L);
-        bankAccountService.outerRollbackWithExceptionInvokeInner(5, 1L);
+        requiredOuterService.outerRollbackWithExceptionInvokeInner(5, 1L);
 
         then:
         thrown (RuntimeException)
