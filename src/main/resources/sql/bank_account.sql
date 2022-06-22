@@ -11,7 +11,7 @@
  Target Server Version : 50738
  File Encoding         : 65001
 
- Date: 17/06/2022 14:18:32
+ Date: 22/06/2022 10:46:03
 */
 
 SET NAMES utf8mb4;
@@ -27,25 +27,13 @@ CREATE TABLE `bank_account`  (
   `balance` int(255) NULL DEFAULT NULL,
   `create_date` datetime NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 40 CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of bank_account
 -- ----------------------------
-INSERT INTO `bank_account` VALUES (1, 'james', 500, '2022-06-15 19:38:22');
+INSERT INTO `bank_account` VALUES (1, 'james', 1982, '2022-06-15 19:38:22');
 INSERT INTO `bank_account` VALUES (2, 'kobe', 500, '2022-06-15 19:38:22');
+INSERT INTO `bank_account` VALUES (3, 'curry', 600, '2022-06-21 22:41:09');
 
 SET FOREIGN_KEY_CHECKS = 1;
-
-
--- 查全局事务参数
-SELECT
-@@GLOBAL.transaction_isolation,
-@@GLOBAL.transaction_read_only,
-@@GLOBAL.max_connections;
-
--- 设置隔离级别
-SET @@GLOBAL.transaction_isolation = 'READ-UNCOMMITTED';
-
--- 设置连接数, 避免连接被拒绝
-SET @@GLOBAL.max_connections = 5000;
