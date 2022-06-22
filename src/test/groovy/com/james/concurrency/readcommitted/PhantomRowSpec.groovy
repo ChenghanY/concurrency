@@ -47,13 +47,15 @@ class PhantomRowSpec extends Specification {
     @Autowired
     TransactionTemplate transactionTemplate;
 
-    def "产生幻读：select for update + SET @@GLOBAL.transaction_isolation = 'READ-COMMITTED'" () {
-        given:
+    def setup() {
         bankAccountMapper.updateBalanceById(300, 1L);
         bankAccountMapper.updateBalanceById(500, 2L);
         bankAccountMapper.updateBalanceById(600, 3L);
         bankAccountMapper.deleteByName("rose");
+    }
 
+    def "产生幻读：select for update + SET @@GLOBAL.transaction_isolation = 'READ-COMMITTED'" () {
+        given:
         ExecutorService executorService = Executors.newFixedThreadPool(2);
         // 线程(事务)A使用了for update 范围查询
         Future<List<BankAccount>> future = executorService.submit(() -> {
@@ -106,11 +108,6 @@ class PhantomRowSpec extends Specification {
 
     def "产生幻读： update + SET @@GLOBAL.transaction_isolation = 'READ-COMMITTED'" () {
         given:
-        bankAccountMapper.updateBalanceById(300, 1L);
-        bankAccountMapper.updateBalanceById(500, 2L);
-        bankAccountMapper.updateBalanceById(600, 3L);
-        bankAccountMapper.deleteByName("rose");
-
         List<BankAccount> beforeList = bankAccountMapper.selectListByBalanceGt(500);
         ExecutorService executorService = Executors.newFixedThreadPool(2);
         // 线程(事务)A使用了两次范围更新
@@ -156,11 +153,6 @@ class PhantomRowSpec extends Specification {
 
     def "幻读解决： 普通select(快照隔离) + SET @@GLOBAL.transaction_isolation = 'REPEATABLE-READ' 及以上" () {
         given:
-        bankAccountMapper.updateBalanceById(300, 1L);
-        bankAccountMapper.updateBalanceById(500, 2L);
-        bankAccountMapper.updateBalanceById(600, 3L);
-        bankAccountMapper.deleteByName("rose");
-
         ExecutorService executorService = Executors.newFixedThreadPool(2);
         // 线程(事务)A使用了for update 范围查询
         Future<List<BankAccount>> future = executorService.submit(() -> {
@@ -211,11 +203,6 @@ class PhantomRowSpec extends Specification {
 
     def "幻读解决： update + SET @@GLOBAL.transaction_isolation = 'REPEATABLE-READ' 及以上" () {
         given:
-        bankAccountMapper.updateBalanceById(300, 1L);
-        bankAccountMapper.updateBalanceById(500, 2L);
-        bankAccountMapper.updateBalanceById(600, 3L);
-        bankAccountMapper.deleteByName("rose");
-
         List<BankAccount> beforeList = bankAccountMapper.selectListByBalanceGt(500);
         ExecutorService executorService = Executors.newFixedThreadPool(2);
         // 线程(事务)A使用了两次范围更新
