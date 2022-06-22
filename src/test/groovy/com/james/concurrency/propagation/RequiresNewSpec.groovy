@@ -20,6 +20,9 @@ import spock.lang.Specification
  * Such an independent inner transaction can also declare its own isolation level, timeout,
  * and read-only settings and not inherit an outer transaction’s characteristics.
  *
+ * REQUIRES_NEW 是独立于外层事务的。内层事务的方法执行完毕会立即提交或者回滚。
+ *
+ * note:
  *  requires_new事务传播的隐患： 外层和内层同时锁定一个行会造成死锁。
  */
 @SpringBootTest(classes = ConcurrencyApplication.class)

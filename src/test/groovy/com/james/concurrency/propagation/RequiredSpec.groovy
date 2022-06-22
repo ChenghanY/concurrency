@@ -18,7 +18,9 @@ import spock.lang.Specification
  * (for example, a service facade that delegates to several repository methods
  * where all the underlying resources have to participate in the service-level transaction).
  *
- * 声明为Required的事务被调用：
+ * REQUIRED 声明的方法必须要处于事务中。如果外层有事务则加入到外层事务（两者代码合并成一个大事务）。
+ * 如果外层无事务，则为内层代码生成新事务。
+ *
  *
  * 外部无事务：
  *      内部回滚不影响外部
