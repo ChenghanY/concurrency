@@ -1,6 +1,6 @@
 package com.james.concurrency.service;
 
-public interface RequiresNewOuterBankAccountService {
+public interface RequiresNewOuterService {
 
     /**
      * 传播行为Required测试 。Spring默认

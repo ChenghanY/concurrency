@@ -1,7 +1,7 @@
 package com.james.concurrency.service.impl;
 
 import com.james.concurrency.mapper.BankAccountMapper;
-import com.james.concurrency.service.InnerBankAccountService;
+import com.james.concurrency.service.InnerService;
 import com.james.concurrency.service.RequiredOuterService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,7 +15,7 @@ public class RequiredOuterServiceImpl implements RequiredOuterService {
     BankAccountMapper mapper;
 
     @Autowired
-    InnerBankAccountService innerService;
+    InnerService innerService;
 
     @Override
     public void emptyInvokeInner(Integer cost, Long id) {
