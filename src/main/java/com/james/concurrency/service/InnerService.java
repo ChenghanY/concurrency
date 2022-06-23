@@ -10,7 +10,7 @@ package com.james.concurrency.service;
  */
 public interface InnerService {
     /**
-     * required/requires_new/nested 调用后抛异常
+     * required/requires_new/nested 均调用
      */
     void consumeThenRollbackWithException(Integer cost, Long id);
 
