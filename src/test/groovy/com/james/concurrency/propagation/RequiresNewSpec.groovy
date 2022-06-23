@@ -47,7 +47,7 @@ class RequiresNewSpec extends Specification {
         bankAccountMapper.selectById(1L).getBalance() == 0
     }
 
-    def "外层有事务，内层调用 requires_new 行为的事务。内层主动回滚事务，由于执行内外层对同样的行加锁，死锁发生"() {
+    def "外层有事务，内层调用 requires_new 行为的事务。由于执行内外层对同样的行加锁，死锁发生"() {
         when:
         requiresNewOuterService.lockSameRowThenInnerRollBack(5, 1L);
 
@@ -61,18 +61,6 @@ class RequiresNewSpec extends Specification {
 
         then:
         bankAccountMapper.selectById(1L).getBalance() == 0;
-        bankAccountMapper.selectById(2L).getBalance() == 5;
-    }
-
-
-    def "外层有事务，内层调用 requires_new 行为的事务。内层抛Exception，内外逻辑都回滚"() {
-        when:
-        requiresNewOuterService.thenInnerRollBackWithException(5, 1L);
-
-        then:
-        thrown (RuntimeException);
-        // 若事务嵌套，内层事务回滚同时会回滚外层事务。
-        bankAccountMapper.selectById(1L).getBalance() == 5;
         bankAccountMapper.selectById(2L).getBalance() == 5;
     }
 
@@ -94,5 +82,4 @@ class RequiresNewSpec extends Specification {
         bankAccountMapper.selectById(1L).getBalance() == 5;
         bankAccountMapper.selectById(2L).getBalance() == 0;
     }
-
 }

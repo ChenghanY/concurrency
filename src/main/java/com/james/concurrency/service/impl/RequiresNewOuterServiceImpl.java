@@ -29,13 +29,6 @@ public class RequiresNewOuterServiceImpl implements RequiresNewOuterService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void thenInnerRollBack(Integer cost, Long id) {
-        mapper.atomicUpdateBalanceByCostAndId(cost, id);
-        innerService.requiresNewConsumeThenRollback(cost, id + 1);
-    }
-
-    @Override
-    @Transactional(rollbackFor = Exception.class)
     public void lockSameRowThenInnerRollBack(Integer cost, Long id) {
         mapper.atomicUpdateBalanceByCostAndId(cost, id);
         innerService.requiresNewConsumeThenRollback(cost, id);
@@ -43,9 +36,9 @@ public class RequiresNewOuterServiceImpl implements RequiresNewOuterService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void thenInnerRollBackWithException(Integer cost, Long id) {
+    public void thenInnerRollBack(Integer cost, Long id) {
         mapper.atomicUpdateBalanceByCostAndId(cost, id);
-        innerService.requiresNewConsumeThenRollbackByException(cost, id + 1);
+        innerService.requiresNewConsumeThenRollback(cost, id + 1);
     }
 
     @Override

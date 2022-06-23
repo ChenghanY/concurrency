@@ -15,6 +15,14 @@ public class InnerServiceImpl implements InnerService {
     BankAccountMapper bankAccountMapper;
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void consumeThenRollbackWithException(Integer cost, Long id) {
+        bankAccountMapper.atomicUpdateBalanceByCostAndId(cost, id);
+        throw new RuntimeException();
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
     public void requiredConsume(Integer cost, Long id) {
         bankAccountMapper.atomicUpdateBalanceByCostAndId(cost, id);
     }
@@ -27,13 +35,6 @@ public class InnerServiceImpl implements InnerService {
     }
 
     @Override
-    @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
-    public void requiredConsumeThenRollbackWithException(Integer cost, Long id) {
-        bankAccountMapper.atomicUpdateBalanceByCostAndId(cost, id);
-        throw new RuntimeException();
-    }
-
-    @Override
     @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
     public void requiresNewConsumeThenRollback(Integer cost, Long id) {
         bankAccountMapper.atomicUpdateBalanceByCostAndId(cost, id);
@@ -42,14 +43,20 @@ public class InnerServiceImpl implements InnerService {
 
     @Override
     @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
-    public void requiresNewConsumeThenRollbackByException(Integer cost, Long id) {
+    public void requiresNewConsume(Integer cost, Long id) {
         bankAccountMapper.atomicUpdateBalanceByCostAndId(cost, id);
-        throw new RuntimeException();
     }
 
     @Override
-    @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
-    public void requiresNewConsume(Integer cost, Long id) {
+    @Transactional(rollbackFor = Exception.class, propagation = Propagation.NESTED)
+    public void nestedConsumeThenRollback(Integer cost, Long id) {
+        bankAccountMapper.atomicUpdateBalanceByCostAndId(cost, id);
+        TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class, propagation = Propagation.NESTED)
+    public void nestedConsume(Integer cost, Long id) {
         bankAccountMapper.atomicUpdateBalanceByCostAndId(cost, id);
     }
 }
