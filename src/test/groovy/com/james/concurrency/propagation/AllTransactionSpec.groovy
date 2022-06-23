@@ -3,6 +3,7 @@ package com.james.concurrency.propagation
 import com.james.concurrency.ConcurrencyApplication
 import com.james.concurrency.mapper.BankAccountMapper
 import com.james.concurrency.service.AllTransactionOuterService
+import com.james.concurrency.service.TransactionalTestException
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import spock.lang.Specification
@@ -26,7 +27,7 @@ class AllTransactionSpec extends Specification {
         outerService.thenInnerRollBackWithExceptionNotCatch(5, 1L);
 
         then:
-        thrown (RuntimeException);
+        thrown (TransactionalTestException);
         // 若事务嵌套，内层事务回滚同时会回滚外层事务。
         bankAccountMapper.selectById(1L).getBalance() == 5;
         bankAccountMapper.selectById(2L).getBalance() == 5;

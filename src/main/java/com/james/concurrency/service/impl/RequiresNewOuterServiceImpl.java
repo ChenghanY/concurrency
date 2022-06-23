@@ -3,6 +3,7 @@ package com.james.concurrency.service.impl;
 import com.james.concurrency.mapper.BankAccountMapper;
 import com.james.concurrency.service.InnerService;
 import com.james.concurrency.service.RequiresNewOuterService;
+import com.james.concurrency.service.TransactionalTestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -54,6 +55,6 @@ public class RequiresNewOuterServiceImpl implements RequiresNewOuterService {
     public void thenOuterRollbackWithException(Integer cost, Long id) {
         mapper.atomicUpdateBalanceByCostAndId(cost, id);
         innerService.requiresNewConsume(cost,id + 1);
-        throw new RuntimeException();
+        throw new TransactionalTestException();
     }
 }

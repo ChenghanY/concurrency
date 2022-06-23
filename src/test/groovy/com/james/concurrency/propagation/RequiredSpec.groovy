@@ -3,6 +3,7 @@ package com.james.concurrency.propagation
 import com.james.concurrency.ConcurrencyApplication
 import com.james.concurrency.mapper.BankAccountMapper
 import com.james.concurrency.service.RequiredOuterService
+import com.james.concurrency.service.TransactionalTestException
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.transaction.UnexpectedRollbackException
@@ -72,7 +73,7 @@ class RequiredSpec extends Specification {
         requiredOuterService.thenOuterRollbackWithException(5, 1L);
 
         then:
-        thrown (RuntimeException)
+        thrown (TransactionalTestException)
         bankAccountMapper.selectById(1L).getBalance() == 5;
     }
 }

@@ -3,6 +3,7 @@ package com.james.concurrency.service.impl;
 import com.james.concurrency.mapper.BankAccountMapper;
 import com.james.concurrency.service.InnerService;
 import com.james.concurrency.service.NestedOuterService;
+import com.james.concurrency.service.TransactionalTestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -57,6 +58,6 @@ public class NestedOuterServiceImpl implements NestedOuterService {
     public void thenOuterRollbackWithException(Integer cost, Long id) {
         mapper.atomicUpdateBalanceByCostAndId(cost, id);
         innerService.nestedConsume(cost,id);
-        throw new RuntimeException();
+        throw new TransactionalTestException();
     }
 }

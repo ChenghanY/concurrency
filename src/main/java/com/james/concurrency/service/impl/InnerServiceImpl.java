@@ -2,6 +2,7 @@ package com.james.concurrency.service.impl;
 
 import com.james.concurrency.mapper.BankAccountMapper;
 import com.james.concurrency.service.InnerService;
+import com.james.concurrency.service.TransactionalTestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -18,7 +19,7 @@ public class InnerServiceImpl implements InnerService {
     @Transactional(rollbackFor = Exception.class)
     public void consumeThenRollbackWithException(Integer cost, Long id) {
         bankAccountMapper.atomicUpdateBalanceByCostAndId(cost, id);
-        throw new RuntimeException();
+        throw new TransactionalTestException();
     }
 
     @Override
