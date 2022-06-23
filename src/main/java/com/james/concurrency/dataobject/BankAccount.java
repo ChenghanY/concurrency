@@ -1,7 +1,5 @@
 package com.james.concurrency.dataobject;
 
-import java.util.Date;
-
 public class BankAccount {
 
     private Long id;
