@@ -30,6 +30,10 @@ public interface BankAccountMapper {
 
     void updateBalanceByBalanceGt(@Param("balance") int balance, @Param("currentBalance") int currentBalance);
 
+    void updateBalanceByBalanceBetween(@Param("balance") int balance,
+                                       @Param("leftBalance") int leftBalance,
+                                       @Param("rightBalance") int rightBalance);
+
     void updateNameByBalanceGt(@Param("name") String name, @Param("balance") int balance);
 
     void deleteByName(@Param("name")String name);

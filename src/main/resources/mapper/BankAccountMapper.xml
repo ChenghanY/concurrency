@@ -115,6 +115,16 @@
        where
             `balance` > #{currentBalance,jdbcType=INTEGER}
     </update>
+        update
+            `bank_account`
+        set
+            `balance` = #{balance,jdbcType=INTEGER}
+        where
+            `balance` between #{leftBalance,jdbcType=INTEGER} and #{rightBalance,jdbcType=INTEGER}
+    <update id="updateBalanceByBalanceBetween">
+
+    </update>
+
 
     <update id="updateNameByBalanceGt">
        update
@@ -138,5 +148,4 @@
         </set>
         where id = #{id,jdbcType=BIGINT}
     </update>
-
 </mapper>

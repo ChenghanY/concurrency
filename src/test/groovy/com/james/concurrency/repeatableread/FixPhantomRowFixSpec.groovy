@@ -17,7 +17,7 @@ import java.util.concurrent.Executors
 import java.util.concurrent.Future
 
 @SpringBootTest(classes = ConcurrencyApplication.class)
-class PhantomRowFixSpec extends Specification  {
+class FixPhantomRowFixSpec extends Specification  {
 
     @Autowired
     BankAccountMapper bankAccountMapper;
