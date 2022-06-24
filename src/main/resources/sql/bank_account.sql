@@ -32,7 +32,7 @@ CREATE TABLE `bank_account`  (
 -- ----------------------------
 -- Records of bank_account
 -- ----------------------------
-INSERT INTO `bank_account` VALUES (1, 'james', 1982, '2022-06-15 19:38:22');
+INSERT INTO `bank_account` VALUES (1, 'james', 400, '2022-06-15 19:38:22');
 INSERT INTO `bank_account` VALUES (2, 'kobe', 500, '2022-06-15 19:38:22');
 INSERT INTO `bank_account` VALUES (3, 'curry', 600, '2022-06-21 22:41:09');
 
