@@ -1,4 +1,4 @@
-package com.james.concurrency.readuncommitted
+package com.james.concurrency.readcommitted
 
 import com.james.concurrency.ConcurrencyApplication
 import com.james.concurrency.dataobject.BankAccount
@@ -15,7 +15,7 @@ import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
 @SpringBootTest(classes = ConcurrencyApplication.class)
-class DirtyReadSpec extends Specification {
+class DirtyReadFixSpec extends Specification{
 
     @Autowired
     BankAccountMapper bankAccountMapper;
@@ -24,10 +24,10 @@ class DirtyReadSpec extends Specification {
     TransactionTemplate transactionTemplate;
 
     def setup () {
-        transactionTemplate.setIsolationLevel(TransactionDefinition.ISOLATION_READ_UNCOMMITTED)
+        transactionTemplate.setIsolationLevel(TransactionDefinition.ISOLATION_READ_COMMITTED)
     }
 
-    def "产生脏读 SET @@GLOBAL.transaction_isolation = 'READ-UNCOMMITTED'"() {
+    def "解决脏读 SET @@GLOBAL.transaction_isolation = 'READ-COMMITTED' 及以上的隔离级别"() {
         given:
         bankAccountMapper.updateBalanceById(0, 1L);
         // 线程(事务)A
@@ -63,7 +63,7 @@ class DirtyReadSpec extends Specification {
         while(! executorService.isTerminated());
 
         expect:
-        // 虽然回滚了，但是发生脏读，总数为2
-        bankAccountMapper.selectById(1L).getBalance() == 2
+        // rc及以上隔离级别避免脏读
+        bankAccountMapper.selectById(1L).getBalance() == 1
     }
 }
