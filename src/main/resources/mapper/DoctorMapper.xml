@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.james.concurrency.mapper.DoctorMapper">
+    <resultMap id="BaseResultMap" type="com.james.concurrency.dataobject.Doctor">
+        <id column="id" jdbcType="BIGINT" property="id" />
+        <result column="shift_id" jdbcType="BIGINT" property="shiftId" />
+        <result column="name" jdbcType="VARCHAR"  property="name" />
+        <result column="on_call" jdbcType="TINYINT"  property="onCall" />
+    </resultMap>
+    <sql id="Base_Column_List">
+        id, shift_id, name, on_call
+    </sql>
+
+    <insert id="insert" parameterType="com.james.concurrency.dataobject.Doctor">
+        insert into `doctor` (shift_id, name, on_call)
+        values (#{shiftId, jdbcType=BIGINT}, #{name, jdbcType=VARCHAR}, #{onCall, jdbcType=TINYINT})
+    </insert>
+
+    <delete id="deleteByName">
+        delete from `doctor` where `name` = #{name, jdbcType=VARCHAR};
+    </delete>
+
+    <select id="countByShiftIdAndOnCall" resultType="java.lang.Long">
+        select
+            count(*)
+        from
+            `doctor`
+        where
+            `shift_id` = #{shiftId, jdbcType=BIGINT}
+            and `on_call` = #{onCall, jdbcType=TINYINT}
+    </select>
+
+    <update id="updateOnCallByShiftIdAndName">
+        update
+            `doctor`
+        set
+            `on_call` = #{onCall, jdbcType=TINYINT}
+        where
+            `shift_id` = #{shiftId, jdbcType=BIGINT}
+            and `name` = #{name, jdbcType=VARCHAR}
+    </update>
+</mapper>
