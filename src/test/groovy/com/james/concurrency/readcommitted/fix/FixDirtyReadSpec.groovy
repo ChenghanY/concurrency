@@ -1,4 +1,4 @@
-package com.james.concurrency.readcommitted
+package com.james.concurrency.readcommitted.fix
 
 import com.james.concurrency.ConcurrencyApplication
 import com.james.concurrency.dataobject.BankAccount
@@ -15,7 +15,7 @@ import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
 @SpringBootTest(classes = ConcurrencyApplication.class)
-class DirtyReadFixSpec extends Specification{
+class FixDirtyReadSpec extends Specification{
 
     @Autowired
     BankAccountMapper bankAccountMapper;

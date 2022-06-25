@@ -1,4 +1,4 @@
-package com.james.concurrency.repeatableread
+package com.james.concurrency.repeatableread.fix
 
 import com.james.concurrency.ConcurrencyApplication
 import com.james.concurrency.dataobject.BankAccount

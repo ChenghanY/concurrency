@@ -1,4 +1,4 @@
-package com.james.concurrency.readcommitted
+package com.james.concurrency.readcommitted.optimization
 
 import com.james.concurrency.ConcurrencyApplication
 import com.james.concurrency.dataobject.BankAccount
