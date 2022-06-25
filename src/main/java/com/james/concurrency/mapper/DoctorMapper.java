@@ -9,6 +9,8 @@ public interface DoctorMapper {
 
     Long countByShiftIdAndOnCall(@Param("shiftId") Long shiftId, @Param("onCall") Boolean onCall);
 
+    Long countByShiftIdAndOnCallForUpdate(@Param("shiftId") Long shiftId, @Param("onCall") Boolean onCall);
+
     void updateOnCallByShiftIdAndName(@Param("onCall") Boolean onCall, @Param("shiftId") Long shiftId, @Param("name") String name);
 
     void insert(Doctor doctor);

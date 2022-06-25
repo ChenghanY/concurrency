@@ -1,4 +1,4 @@
-package com.james.concurrency.all
+package com.james.concurrency.repeatableread
 
 import com.james.concurrency.ConcurrencyApplication
 import com.james.concurrency.dataobject.Doctor
@@ -44,7 +44,7 @@ class WriteSkewSpec extends Specification{
         doctorMapper.insert(new Doctor(shiftId, bob,true));
     }
 
-    def "验证所有隔离级别下，都会发生 write skew 写倾斜"() {
+    def "write skew 写倾斜 SET @@GLOBAL.transaction_isolation = 'REPEATABLE-READ'"() {
         given:
         // 线程(事务)A
         ExecutorService executorService = Executors.newFixedThreadPool(2);
@@ -53,7 +53,7 @@ class WriteSkewSpec extends Specification{
                 protected void doInTransactionWithoutResult(TransactionStatus status) {
                     def onCallCount = doctorMapper.countByShiftIdAndOnCall(shiftId, true);
                     Thread.sleep(2000);
-                    if (onCallCount >= 2) {
+                    if (onCallCount > 1) {
                         doctorMapper.updateOnCallByShiftIdAndName(false, shiftId, bob);
                     }
                 }
@@ -66,7 +66,7 @@ class WriteSkewSpec extends Specification{
                 protected void doInTransactionWithoutResult(TransactionStatus status) {
                     def onCallCount = doctorMapper.countByShiftIdAndOnCall(shiftId, true);
                     Thread.sleep(2000);
-                    if (onCallCount >= 2) {
+                    if (onCallCount > 1) {
                         doctorMapper.updateOnCallByShiftIdAndName(false, shiftId, alice);
                     }
                 }

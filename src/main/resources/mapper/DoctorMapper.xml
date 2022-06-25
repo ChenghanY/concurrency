@@ -30,6 +30,17 @@
             and `on_call` = #{onCall, jdbcType=TINYINT}
     </select>
 
+    <select id="countByShiftIdAndOnCallForUpdate" resultType="java.lang.Long">
+        select
+            count(*)
+        from
+            `doctor`
+        where
+            `shift_id` = #{shiftId, jdbcType=BIGINT}
+            and `on_call` = #{onCall, jdbcType=TINYINT}
+        for update
+    </select>
+
     <update id="updateOnCallByShiftIdAndName">
         update
             `doctor`
