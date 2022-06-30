@@ -14,8 +14,8 @@ class SupportThreadSafeCollectionSpec extends Specification{
 
     def "CopyOnWriteArrayList 用迭代器先获取快照。仅写加锁，且写写互斥，适合读多写少的情况" () {
         given:
-        def loopCount = 10;
-        def copyOnWriteList = new CopyOnWriteArrayList<Integer>()
+        var loopCount = 10;
+        var copyOnWriteList = new CopyOnWriteArrayList<Integer>()
         for (int j = 0; j < loopCount; j++) {
             copyOnWriteList.add(1);
         }
@@ -28,8 +28,8 @@ class SupportThreadSafeCollectionSpec extends Specification{
                 snapshot = elements;
             }
          */
-        def iterator = copyOnWriteList.iterator()
-        def otherThread = new Thread(() -> copyOnWriteList.remove(3))
+        var iterator = copyOnWriteList.iterator()
+        var otherThread = new Thread(() -> copyOnWriteList.remove(3))
         otherThread.start()
         otherThread.join()
 
@@ -40,19 +40,19 @@ class SupportThreadSafeCollectionSpec extends Specification{
 
     def "ConcurrentHashMap 使用原子操作CAS更新避免隐患"() {
         given:
-        def expectedValue = 1000;
-        def resultKey = "james";
-        def loopCount = expectedValue;
-        def map = new ConcurrentHashMap<String, Integer>()
+        var expectedValue = 1000;
+        var resultKey = "james";
+        var loopCount = expectedValue;
+        var map = new ConcurrentHashMap<String, Integer>()
         map.put(resultKey, 0);
 
         when:
-        def executor = Executors.newFixedThreadPool(loopCount);
+        var executor = Executors.newFixedThreadPool(loopCount);
         for (int j = 0; j < loopCount; j++) {
             executor.execute(() -> {
                 while (true) {
-                    def currentResult = map.get(resultKey);
-                    def isSuccess = map.replace("james", currentResult,  currentResult+ 1);
+                    var currentResult = map.get(resultKey);
+                    var isSuccess = map.replace("james", currentResult,  currentResult+ 1);
                     if (isSuccess) {
                         break;
                     }
