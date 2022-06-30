@@ -11,23 +11,26 @@ class CountDownLatchSpec extends Specification{
     def "CountDownLatch 实现一等多"() {
         given:
         def loopCount = 5
-        def cantAwait = true
         def latch = new CountDownLatch(loopCount)
-        def threadPool = Executors.newFixedThreadPool(loopCount);
+        def threadPool = Executors.newCachedThreadPool();
         // 资源
         def resource = new AtomicInteger(loopCount);
 
         when:
+        threadPool.execute(() -> {
+            latch.await()
+        })
+
+        Thread.sleep(2000)
         for (i in 0..<loopCount) {
             threadPool.execute(() -> {
                 // 确保latch.await()在countDown之前执行
                 latch.countDown()
                 resource.decrementAndGet()
-                cantAwait = false;
             })
         }
-        while (! cantAwait)
-        latch.await();
+        threadPool.shutdown()
+        while(! threadPool.isTerminated());
 
         then:
         // await 阻塞等待所有countDown执行，直至为0。
