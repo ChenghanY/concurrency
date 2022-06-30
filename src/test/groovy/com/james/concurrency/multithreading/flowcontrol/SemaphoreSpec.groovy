@@ -10,11 +10,11 @@ class SemaphoreSpec extends Specification{
 
     def "Semaphore 保证同一时刻只能有N个资源被占用 可以按占用资源的权重给线程颁发许可"() {
         given:
-        var loopCount = 6;
-        var count = new AtomicInteger(1);
+        def loopCount = 6;
+        def count = new AtomicInteger(1);
         // 只能有4个资源能同时并发
-        var semaphore = new Semaphore(4, true)
-        var threadPool = Executors.newFixedThreadPool(loopCount);
+        def semaphore = new Semaphore(4, true)
+        def threadPool = Executors.newFixedThreadPool(loopCount);
 
         when:
         for (i in 0..<loopCount) {

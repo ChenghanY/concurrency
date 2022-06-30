@@ -10,16 +10,16 @@ class CyclicBarrierSpec extends Specification{
 
     def "Semaphore 保证同一时刻只能有N个资源被占用 可以按占用资源的权重给线程颁发许可"() {
         given:
-        var loopCount = 10;
-        var count = new AtomicInteger(1);
+        def loopCount = 10;
+        def count = new AtomicInteger(1);
         // 只能有4个资源能同时并发
-        var barrier = new CyclicBarrier(5)
-        var threadPool = Executors.newFixedThreadPool(loopCount);
+        def barrier = new CyclicBarrier(5)
+        def threadPool = Executors.newFixedThreadPool(loopCount);
 
         when:
         for (i in 0..<loopCount) {
             threadPool.execute(() -> {
-                var current = count.getAndIncrement();
+                def current = count.getAndIncrement();
                 Thread.sleep((long) (Math.random() * 10000))
                 barrier.await()
                 println("第" + current + "个玩家开始玩了")

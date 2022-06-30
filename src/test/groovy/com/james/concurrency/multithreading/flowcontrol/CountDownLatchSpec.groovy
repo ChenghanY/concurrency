@@ -10,12 +10,12 @@ class CountDownLatchSpec extends Specification{
 
     def "CountDownLatch 实现一等多"() {
         given:
-        var loopCount = 5
-        var cantAwait = true
-        var latch = new CountDownLatch(loopCount)
-        var threadPool = Executors.newFixedThreadPool(loopCount);
+        def loopCount = 5
+        def cantAwait = true
+        def latch = new CountDownLatch(loopCount)
+        def threadPool = Executors.newFixedThreadPool(loopCount);
         // 资源
-        var resource = new AtomicInteger(loopCount);
+        def resource = new AtomicInteger(loopCount);
 
         when:
         for (i in 0..<loopCount) {
@@ -36,11 +36,11 @@ class CountDownLatchSpec extends Specification{
 
     def "CountDownLatch 实现多等一"() {
         given:
-        var loopCount = 5
-        var threadPool = Executors.newFixedThreadPool(loopCount);
+        def loopCount = 5
+        def threadPool = Executors.newFixedThreadPool(loopCount);
         // 等待准备的人
-        var waitingPrepare = new AtomicInteger(loopCount);
-        var begin = new CountDownLatch(1);
+        def waitingPrepare = new AtomicInteger(loopCount);
+        def begin = new CountDownLatch(1);
 
         when:
         for (i in 0..<loopCount) {
@@ -60,16 +60,16 @@ class CountDownLatchSpec extends Specification{
 
     def "CountDownLatch 多等一 和 一等多 综合使用。跑步选手等裁判员发令，等待所有选手到达终点比赛结束"() {
         given:
-        var loopCount = 5
-        var waitingPrepare = new AtomicInteger(loopCount);
-        var begin = new CountDownLatch(1);
-        var end = new CountDownLatch(loopCount);
-        var threadPool = Executors.newFixedThreadPool(5);
+        def loopCount = 5
+        def waitingPrepare = new AtomicInteger(loopCount);
+        def begin = new CountDownLatch(1);
+        def end = new CountDownLatch(loopCount);
+        def threadPool = Executors.newFixedThreadPool(5);
 
         when:
         for (i in 0..<loopCount) {
             threadPool.execute(() -> {
-                var current = waitingPrepare.decrementAndGet()
+                def current = waitingPrepare.decrementAndGet()
                 println("选手" + current + "开始准备起跑")
                 begin.await()
                 // 选手实力不同 冲过终点所耗时不同

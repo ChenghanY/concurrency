@@ -9,8 +9,8 @@ import java.util.concurrent.Executors
 class WrongWayDoThreadSafeCollectionSpec extends Specification{
 
     def "CopyOnWriteArrayList 数据过期问题"() {
-        var loopCount = 10;
-        var copyOnWriteList = new CopyOnWriteArrayList<Integer>()
+        def loopCount = 10;
+        def copyOnWriteList = new CopyOnWriteArrayList<Integer>()
         for (int j = 0; j < loopCount; j++) {
             copyOnWriteList.add(1);
         }
@@ -23,8 +23,8 @@ class WrongWayDoThreadSafeCollectionSpec extends Specification{
                 snapshot = elements;
             }
          */
-        var iterator = copyOnWriteList.iterator()
-        var otherThread = new Thread(() -> copyOnWriteList.remove(3))
+        def iterator = copyOnWriteList.iterator()
+        def otherThread = new Thread(() -> copyOnWriteList.remove(3))
         otherThread.start()
         otherThread.join()
 
@@ -47,14 +47,14 @@ class WrongWayDoThreadSafeCollectionSpec extends Specification{
 
     def "ConcurrentHashMap 非原子操作造成线程不安全"() {
         given:
-        var expectedValue = 1000;
-        var resultKey = "james";
-        var loopCount = expectedValue;
-        var map = new ConcurrentHashMap<String, Integer>()
+        def expectedValue = 1000;
+        def resultKey = "james";
+        def loopCount = expectedValue;
+        def map = new ConcurrentHashMap<String, Integer>()
         map.put(resultKey, 0);
 
         when:
-        var executor = Executors.newFixedThreadPool(loopCount);
+        def executor = Executors.newFixedThreadPool(loopCount);
         for (int j = 0; j < loopCount; j++) {
             executor.execute(() -> {
                 map.put("james", map.get(resultKey) + 1);
