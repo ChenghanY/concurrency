@@ -1,4 +1,4 @@
-package com.james.concurrency.multithreading.juc
+package com.james.concurrency.multithreading.atomic
 
 import spock.lang.Specification
 
@@ -46,7 +46,7 @@ class AtomicSpec extends Specification{
         result.get() == loopCount;
     }
 
-    def "高并发下 使用LongAdder 性能更高。原理是金证激烈时，使用工作线程独自自增，再merge进主内存" () {
+    def "高并发下 使用LongAdder 性能更高。原理是竞争激烈时，使用工作线程独自自增，再merge进主内存" () {
         given:
         def result = new LongAdder();
         def count = 1000;

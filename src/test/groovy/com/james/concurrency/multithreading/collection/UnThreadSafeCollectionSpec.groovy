@@ -1,9 +1,7 @@
-package com.james.concurrency.multithreading.juc
+package com.james.concurrency.multithreading.collection
 
 import spock.lang.Specification
 
-import java.util.concurrent.ConcurrentHashMap
-import java.util.concurrent.CopyOnWriteArrayList
 import java.util.concurrent.Executors
 
 /**
