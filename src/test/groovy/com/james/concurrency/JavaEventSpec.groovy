@@ -1,23 +1,40 @@
 package com.james.concurrency
 
-import com.james.concurrency.base.listener.BankAccountBankAccountConsumeEventListener
-import com.james.concurrency.base.BankAccountConsumeEventBus
-import com.james.concurrency.base.listener.LoggerBankAccountConsumeEventListener
-import com.james.concurrency.base.listener.SimpleBankAccountConsumeEventListener
+import com.james.concurrency.base.listener.AccountModifyNameEventListener
+import com.james.concurrency.base.AccountEventBus
+import com.james.concurrency.base.listener.AccountModifyBalanceEventListener
+import com.james.concurrency.dataobject.BankAccount
+import com.james.concurrency.mapper.BankAccountMapper
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.test.context.SpringBootTest
 import spock.lang.Specification
 
+@SpringBootTest(classes = ConcurrencyApplication.class)
 class JavaEventSpec extends Specification{
 
-    def "Java 原生事件api用法"() {
-        expect:
-        BankAccountConsumeEventBus publisher = new BankAccountConsumeEventBus();
-        // 添加方法监听器, 对监听器的扩展是开放的，而不用改核心的 methodToMonitor 方法
-        publisher.addMethodExecutionEventListener(new SimpleBankAccountConsumeEventListener());
-        publisher.addMethodExecutionEventListener(new BankAccountBankAccountConsumeEventListener());
-        publisher.addMethodExecutionEventListener(new LoggerBankAccountConsumeEventListener());
+    @Autowired
+    BankAccountMapper bankAccountMapper
 
-        publisher.publishConsumeEvent();
+    def setup() {
+        bankAccountMapper.deleteByName("james")
+    }
+
+    def "Java 原生事件api用法"() {
+        given:
+        def newAccount = new BankAccount("james", 200)
+
+        when:
+        // 新增操作
+        bankAccountMapper.insert(newAccount)
+        AccountEventBus bus = new AccountEventBus();
+        // 添加监听器, 需要添加更多的监听器只用增加AccountEventListener的实现类即可不用关心Bus的实现，对拓展开放
+        bus.addMethodExecutionEventListener(new AccountModifyBalanceEventListener());
+        bus.addMethodExecutionEventListener(new AccountModifyNameEventListener());
+
+        then:
+        // 发布事件，所有监听器响应事件
+        bus.publishEvent(newAccount);
         // 客户端随时移除掉已有的监听器避免内存泄露
-        publisher.removeAllListeners();
+        bus.removeAllListeners();
     }
 }

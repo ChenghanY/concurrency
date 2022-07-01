@@ -1,6 +1,6 @@
 package com.james.concurrency.dataobject;
 
-public enum MethodExecutionStatus {
+public enum EventStatus {
 
     BEGIN,
 

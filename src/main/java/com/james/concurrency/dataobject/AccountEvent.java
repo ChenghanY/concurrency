@@ -2,9 +2,9 @@ package com.james.concurrency.dataobject;
 
 import java.util.EventObject;
 
-public class ConsumeEvent extends EventObject {
+public class AccountEvent extends EventObject {
 
-    public ConsumeEvent(Object source) {
+    public AccountEvent(BankAccount source) {
         super(source);
     }
 

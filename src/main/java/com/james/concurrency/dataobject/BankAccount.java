@@ -10,6 +10,17 @@ public class BankAccount {
 
     private int balance;
 
+    public BankAccount(Long id, String name, int balance) {
+        this.id = id;
+        this.name = name;
+        this.balance = balance;
+    }
+
+    public BankAccount(String name, int balance) {
+        this.name = name;
+        this.balance = balance;
+    }
+
     public Long getId() {
         return id;
     }
