@@ -82,6 +82,20 @@ class DirtyWriteSpec extends Specification {
           https://dev.mysql.com/doc/refman/5.7/en/innodb-locks-set.html
 
           update操作会加锁，这也就是为什么脏写问题被mysql解决了。
+
+          业务解释:
+          事务A
+          product_buyer 表 product_id == 1 更新 加锁不释放
+          事务B
+          product_buyer  表 product_id == 1 等待持有锁
+          事务A
+          product_buyer invoice 表更新成功并释放锁
+          事务B
+          获得 product_buyer 表 product_id == 1 的锁并更新
+          更新invoice 成功
+
+          综上, 先获取写锁的事务会被后面获取写锁的事务全量覆盖，不会出现交叉的情况。
+
          */
         ProductBuyer productBuyer = productBuyerMapper.selectByProductId(productId);
         Invoice invoice = invoiceMapper.selectByProductBuyerId(productBuyer.getId());
